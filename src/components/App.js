@@ -13,12 +13,14 @@ class App extends Component {
       addFormClicked: false,
       orderBy: 'bookName',
       orderDirection: 'asc',
+      queryText: '',
       lastIndex: 0
     };
     this.deleteBook = this.deleteBook.bind(this);
     this.toggleForm = this.toggleForm.bind(this);
     this.addBooks = this.addBooks.bind(this);
     this.changeOrder = this.changeOrder.bind(this);
+    this.searchBook = this.searchBook.bind(this);
   }
 
   toggleForm() {
@@ -47,12 +49,18 @@ class App extends Component {
     });
   }
 
-changeOrder(order, direction) {
-  this.setState({
-    orderBy: order,
-    orderDirection: direction
-  });
-}
+  searchBook(query) {
+    this.setState({
+      queryText: query
+    });
+  }
+
+  changeOrder(order, direction) {
+    this.setState({
+      orderBy: order,
+      orderDirection: direction
+    });
+  }
 
  componentDidMount() {
    fetch('./data.json')
@@ -80,14 +88,26 @@ changeOrder(order, direction) {
       order = -1;
     }
 
-    filteredBooks.sort((a,b) => {
+    filteredBooks = filteredBooks.sort((a,b) => {
       if (a[this.state.orderBy].toLowerCase() < b[this.state.orderBy].toLowerCase()) {
         return -1 * order;
       } else {
         return 1 * order;
       }
 
-    })
+    }).filter(eachItem => {
+      return (
+        eachItem['bookName']
+        .toLowerCase()
+        .includes(this.state.queryText.toLowerCase()) || 
+        eachItem['author']
+        .toLowerCase()
+        .includes(this.state.queryText.toLowerCase()) ||
+        eachItem['notes']
+        .toLowerCase()
+        .includes(this.state.queryText.toLowerCase())
+      )
+    });
     return (
       <main className="page bg-white" id="petratings">
         <div className="container">
@@ -98,6 +118,7 @@ changeOrder(order, direction) {
                   orderBy={this.state.orderBy}
                   orderDirection={this.state.orderDirection}
                   changeOrder={this.changeOrder}
+                  searchBook={this.searchBook}
                 />
                 <AddBooks toggleForm={this.toggleForm} formDisplay={this.state.addFormClicked} addBooks={this.addBooks}/>
                 <BookList books={filteredBooks} deleteBook={this.deleteBook}/>
