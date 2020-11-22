@@ -3,6 +3,7 @@ import '../css/App.css';
 import AddBooks from '../components/AddBooks';
 import SearchBooks from '../components/SearchBooks';
 import BookList from '../components/BookList';
+import { without } from 'lodash';
 
 class App extends Component {
   constructor() {
@@ -11,6 +12,15 @@ class App extends Component {
       myBooks : [],
       lastIndex: 0
     };
+    this.deleteBook = this.deleteBook.bind(this);
+  }
+
+  deleteBook(book) {
+    let tempBook = this.state.myBooks;
+    tempBook = without(tempBook, book)
+    this.setState({
+      myBooks : tempBook
+    })
   }
 
  componentDidMount() {
@@ -39,7 +49,7 @@ class App extends Component {
               <div className="container">
                 <SearchBooks />
                 <AddBooks />
-                <BookList books={this.state.myBooks}/>
+                <BookList books={this.state.myBooks} deleteBook={this.deleteBook}/>
               </div>
             </div>
           </div>
