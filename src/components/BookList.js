@@ -18,7 +18,15 @@ class BookList extends Component {
   
               <div className="pet-info media-body">
                 <div className="pet-head d-flex">
-                  <span className="pet-name">{item.bookName}</span>
+                  <span className="pet-name" 
+                  contentEditable 
+                  suppressContentEditableWarning
+                  onBlur={ 
+                    e => this.props.updateInfo('bookName', e.target.innerText, item.bookId)
+                  }
+                >
+                  {item.bookName}
+                </span>
                   <span className="apt-date ml-auto">
                     <Moment 
                       date={item.releaseDate}
@@ -30,9 +38,25 @@ class BookList extends Component {
   
                 <div className="owner-name">
                   <span className="label-item">Author: </span>
-                  <span>{item.author}</span>
+                  <span 
+                  contentEditable 
+                  suppressContentEditableWarning
+                  onBlur={ 
+                    e => this.props.updateInfo('author', e.target.innerText, item.bookId)
+                  }
+                  >
+                    {item.author}
+                  </span>
                 </div>
-                <div className="apt-notes">{item.notes}</div>
+                <div className="apt-notes"
+                  contentEditable 
+                  suppressContentEditableWarning
+                  onBlur={ 
+                    e => this.props.updateInfo('notes', e.target.innerText, item.bookId)
+                  }
+                  >
+                    {item.notes}
+                  </div>
               </div>
             </div> 
           ))}

@@ -3,7 +3,7 @@ import '../css/App.css';
 import AddBooks from '../components/AddBooks';
 import SearchBooks from '../components/SearchBooks';
 import BookList from '../components/BookList';
-import { without } from 'lodash';
+import { findIndex, without } from 'lodash';
 
 class App extends Component {
   constructor() {
@@ -21,6 +21,7 @@ class App extends Component {
     this.addBooks = this.addBooks.bind(this);
     this.changeOrder = this.changeOrder.bind(this);
     this.searchBook = this.searchBook.bind(this);
+    this.updateInfo = this.updateInfo.bind(this);
   }
 
   toggleForm() {
@@ -52,6 +53,17 @@ class App extends Component {
   searchBook(query) {
     this.setState({
       queryText: query
+    });
+  }
+
+  updateInfo(name, value, id) {
+    let tempBook = this.state.myBooks;
+    let bookIndex = findIndex(this.state.myBooks, {
+      bookId: id
+    });
+    tempBook[bookIndex][name] = value;
+    this.setState({
+      myBooks: tempBook
     });
   }
 
@@ -121,7 +133,11 @@ class App extends Component {
                   searchBook={this.searchBook}
                 />
                 <AddBooks toggleForm={this.toggleForm} formDisplay={this.state.addFormClicked} addBooks={this.addBooks}/>
-                <BookList books={filteredBooks} deleteBook={this.deleteBook}/>
+                <BookList 
+                  books={filteredBooks} 
+                  deleteBook={this.deleteBook}
+                  updateInfo={this.updateInfo}
+                />
               </div>
             </div>
           </div>
