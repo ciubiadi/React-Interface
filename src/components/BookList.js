@@ -22,8 +22,8 @@ class BookList extends Component {
                   <span className="apt-date ml-auto">
                     <Moment 
                       date={item.releaseDate}
-                      parse="YYYY-MM-DD HH:MM"
-                      format="MMM-D h:mma"
+                      parse="YYYY-MM-DD HH:mm"
+                      format="MMMM Do YYYY, h:mm a"
                     />
                   </span>
                 </div>

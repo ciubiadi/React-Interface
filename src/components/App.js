@@ -15,6 +15,7 @@ class App extends Component {
     };
     this.deleteBook = this.deleteBook.bind(this);
     this.toggleForm = this.toggleForm.bind(this);
+    this.addBooks = this.addBooks.bind(this);
   }
 
   toggleForm() {
@@ -29,6 +30,18 @@ class App extends Component {
     this.setState({
       myBooks : tempBook
     })
+  }
+
+  addBooks(book) {
+    let tempBooks = this.state.myBooks;
+    book.bookId = this.state.lastIndex;
+
+    tempBooks.unshift(book);
+
+    this.setState({
+      myBooks: tempBooks,
+      lastIndex: this.state.lastIndex + 1
+    });
   }
 
  componentDidMount() {
@@ -56,7 +69,7 @@ class App extends Component {
             <div className="col-md-12 bg-white">
               <div className="container">
                 <SearchBooks />
-                <AddBooks toggleForm={this.toggleForm} formDisplay={this.state.addFormClicked}/>
+                <AddBooks toggleForm={this.toggleForm} formDisplay={this.state.addFormClicked} addBooks={this.addBooks}/>
                 <BookList books={this.state.myBooks} deleteBook={this.deleteBook}/>
               </div>
             </div>
