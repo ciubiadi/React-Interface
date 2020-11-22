@@ -11,11 +11,14 @@ class App extends Component {
     this.state = {
       myBooks : [],
       addFormClicked: false,
+      orderBy: 'bookName',
+      orderDirection: 'asc',
       lastIndex: 0
     };
     this.deleteBook = this.deleteBook.bind(this);
     this.toggleForm = this.toggleForm.bind(this);
     this.addBooks = this.addBooks.bind(this);
+    this.changeOrder = this.changeOrder.bind(this);
   }
 
   toggleForm() {
@@ -44,6 +47,13 @@ class App extends Component {
     });
   }
 
+changeOrder(order, direction) {
+  this.setState({
+    orderBy: order,
+    orderDirection: direction
+  });
+}
+
  componentDidMount() {
    fetch('./data.json')
     .then(response => response.json())
@@ -62,15 +72,35 @@ class App extends Component {
  }
 
   render() {
+    let order;
+    let filteredBooks = this.state.myBooks;
+    if( this.state.orderDirection === "asc") {
+      order = 1;
+    } else {
+      order = -1;
+    }
+
+    filteredBooks.sort((a,b) => {
+      if (a[this.state.orderBy].toLowerCase() < b[this.state.orderBy].toLowerCase()) {
+        return -1 * order;
+      } else {
+        return 1 * order;
+      }
+
+    })
     return (
       <main className="page bg-white" id="petratings">
         <div className="container">
           <div className="row">
             <div className="col-md-12 bg-white">
               <div className="container">
-                <SearchBooks />
+                <SearchBooks 
+                  orderBy={this.state.orderBy}
+                  orderDirection={this.state.orderDirection}
+                  changeOrder={this.changeOrder}
+                />
                 <AddBooks toggleForm={this.toggleForm} formDisplay={this.state.addFormClicked} addBooks={this.addBooks}/>
-                <BookList books={this.state.myBooks} deleteBook={this.deleteBook}/>
+                <BookList books={filteredBooks} deleteBook={this.deleteBook}/>
               </div>
             </div>
           </div>
